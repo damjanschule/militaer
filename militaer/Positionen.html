@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', fetchData);
         let funktionenData = [];
 
         function fetchData() {
-            fetch('https://me22d-2.hbevf6.easypanel.host/api/collections/funktionen/records')
+            fetch('https://me22d-2.hbevf6.easypanel.host/api/collections/funktionen/records?perPage=100')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
