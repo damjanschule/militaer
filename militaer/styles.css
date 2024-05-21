@@ -1,0 +1,205 @@
+/* Main Structure Start */
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
+
+
+
+body {
+    background: no-repeat url(https://www.miljobs.ch/images/bg.svg?1603b880ed033d972189e3216475089d) top #000;
+    background-size: cover;
+    color: white;
+    font-family: "Heebo", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.wrapper {
+    max-width: 35rem;
+    min-height: 100vh;
+    overflow: hidden;
+    margin: auto;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.content {
+    width: 100%;
+}
+
+/* Main Structure End */
+
+/* Nav Start */
+
+.nav {
+    margin-top: 2rem;
+    position: fixed;
+    width: 100%;
+    left: 0;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    height: 6rem;
+}
+
+/* Nav End */
+
+/* Components Start */
+
+h1 {
+    text-align: center;
+    width: 100%;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+}
+
+.button, button {
+    width: 100%;
+    display: block;
+    background-color: #B7271E;
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 100rem;
+    margin-top: 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+.button-secondary {
+    width: 100%;
+    display: block;
+    border: 1px solid #B7271E;
+    color: rgb(255, 255, 255);
+    padding: 0.75rem;
+    border-radius: 100rem;
+    margin-top: 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+
+
+label {
+    display: block;
+    margin-left: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+input, select{
+    display: block;
+    border: none;
+    background-color: white;
+    color: #000;
+    width: 100%;
+    border-radius: 100rem;
+    padding: 0.75rem;
+}
+
+input:focus {
+    outline: none;
+}
+
+/* Components End */
+
+.link-login {
+    margin-top: 1rem;
+    display: block;
+    text-align: center;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+}
+
+.link-back {
+    margin-bottom: 1.5rem;
+    display: block;
+    text-align: center;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    vertical-align: middle;
+}
+
+th:first-child {
+    text-align: left;
+}
+
+th:nth-child(n+2), td:nth-child(n+2) {
+    text-align: right;
+}
+
+table, th, td {
+    border: none;
+}
+td, th {
+    border-bottom: 1px solid white;
+}
+
+.points {
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+#points {
+    font-weight: 700;
+}
+
+.eintragen-input {
+    margin-bottom: 1rem;
+}
+
+.eintragen-button {
+    margin-top: 2rem;
+}
+
+.dashboard-edit {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+#pointsfunktionen{
+    font-weight: 700;
+}
+
+#funktionenen{
+    font-weight: 700;
+}

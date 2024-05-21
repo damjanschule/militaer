@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+    
+<body>
+    <div class="wrapper">
+        <nav class="nav">
+            <ol class="nav-list">
+                <li class="nav-item">
+                    <a class="logo-link" href="./Register.html">
+                        <img class="logo" src="https://www.miljobs.ch/img/containers/assets/label_get_ready_rund_outline.png/061ba3d8b164057fa0b7f73b1d407119.png">
+                    </a>
+                </li>
+            </ol>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content">
+                <a class="link-back" onclick="window.location='Dashboard.html'+window.location.search;">Zurück</a>
+                <h1>Position eingeben</h1>
+                
+                <form class="form" id="dataForm" onsubmit="submitForm(event)">
+                    <label for="funktion">Wähle eine Funktion</label>
+                    <select class="eintragen-input" id="funktion" name="funktion">
+                    </select>
+                    <button class="eintragen-button" type="submit">Wählen</button>
+                </form>
+               
+            </div>
+        </div> 
+    </div>
+
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', fetchData);
+
+        let funktionenData = [];
+
+        function fetchData() {
+            fetch('https://me22d-2.hbevf6.easypanel.host/api/collections/funktionen/records')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    funktionenData = data.items;
+                    insertFunktionen(funktionenData);
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                    alert('Ein Fehler ist aufgetreten: ' + error.message);
+                });
+        }
+
+        function insertFunktionen(funktionen) {
+            const selectElement = document.getElementById('funktion');
+            funktionen.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.funktion;
+                option.textContent = item.funktion;
+                selectElement.appendChild(option);
+            });
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const data = createJsObjectFromHtmlForm(form);
+
+            const selectedFunktion = data.funktion;
+            const selectedPunkte = funktionenData.find(item => item.funktion === selectedFunktion).punkte;
+
+            saveToLocalStorage({ ...data, punkte: selectedPunkte });
+
+            // Redirect to Dashboard.html with the same query parameters
+            window.location = 'Dashboard.html' + window.location.search;
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(form);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    value = true;
+                }
+                if (value === 'off') {
+                    value = false;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+
+        function saveToLocalStorage(data) {
+            // Store only the latest entry in local storage
+            localStorage.setItem('funktionenData', JSON.stringify(data));
+        }
+
+   </script>
+
+</body>
+</html>

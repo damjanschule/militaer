@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="nav">
+            <ol class="nav-list">
+                <li class="nav-item">
+                    <a class="logo-link" href="./Register.html">
+                        <img class="logo" src="https://www.miljobs.ch/img/containers/assets/label_get_ready_rund_outline.png/061ba3d8b164057fa0b7f73b1d407119.png">
+                    </a>
+                </li>
+            </ol>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1>Wie heisst du?</h1>
+                <form class="form" id="dataForm" onsubmit="submitForm(event)">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name">
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div> 
+    </div>
+
+    <script>
+        
+        function submitForm(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const data = createJsObjectFromHtmlForm(form);
+
+            // Redirect to Dashboard page with name parameter
+            const url = new URL("./Dashboard.html", window.location.href);
+            url.searchParams.set('name', data.name);
+            window.location.href = url.href;
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(form);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    value = true;
+                }
+                if (value === 'off') {
+                    value = false;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+   </script>
+
+</body>
+</html>

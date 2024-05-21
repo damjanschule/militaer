@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" />
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="nav">
+            <ol class="nav-list">
+                <li class="nav-item">
+                    <a class="logo-link" href="./Register.html">
+                        <img class="logo" src="https://www.miljobs.ch/img/containers/assets/label_get_ready_rund_outline.png/061ba3d8b164057fa0b7f73b1d407119.png">
+                    </a>
+                </li>
+            </ol>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1>Hallo <span id="user-name">Name</span></h1>
+                <table>
+                    <tr>
+                        <th>Medizinballstossen</th>
+                        <td class="dashboard-edit">
+                            <p id="medizinballstossen">–</p>
+                            <p id="medizinballstossen-punkte">–</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Einbeinstand</th>
+                        <td class="dashboard-edit">
+                            <p id="einbeinstand">–</p>
+                            <p id="einbeinstand-punkte">–</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Standweitsprung</th>
+                        <td class="dashboard-edit">
+                            <p id="standweitsprung">–</p>
+                            <p id="standweitsprung-punkte">–</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Plank</th>
+                        <td class="dashboard-edit">
+                            <p id="plank">–</p>
+                            <p id="plank-punkte">–</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Pendellauf</th>
+                        <td class="dashboard-edit">
+                            <p id="pendellauf">–</p>
+                            <p id="pendellauf-punkte">–</p>
+                        </td>
+                    </tr>
+                </table>
+                <p class="points">Du hast <span id="points">0</span> Punkte</p>
+                <p class="points">Die geeignete Punktzahl für <span id="funktionenen">POSITION</span> ist <span id="pointsfunktionen">PUNKTE</span> Punkte</p>
+                <a class="button" onclick="window.location='Eintragen.html'+window.location.search;">Resultate eintragen</a>
+                <a class="button-secondary" onclick="window.location='positionen.html'+window.location.search;">Position eingeben</a>
+
+            </div>
+        </div>
+    </div>
+    
+    <script>
+
+        
+document.addEventListener('DOMContentLoaded', displayStoredFunction);
+
+        function displayStoredFunction() {
+            const storedData = localStorage.getItem('funktionenData');
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                const funktionenElement = document.getElementById('funktionenen');
+                const pointsElement = document.getElementById('pointsfunktionen');
+                funktionenElement.textContent = `${data.funktion}`;
+                pointsElement.textContent = `${data.punkte}`;
+            } else {
+                console.log('No stored data found');
+            }
+        }
+
+
+
+
+
+
+
+        let params = new URL(document.location).searchParams;
+        let searchParameter = params.get("name");
+    
+            function fetchData() {
+                fetch(`https://me22d-2.hbevf6.easypanel.host/api/collections/daten/records?filter=(name="${searchParameter}")`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => { displayPoints(data);
+                         })
+                    .catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                        alert('Ein Fehler ist aufgetreten: ' + error.message);
+                    });
+            }
+            
+
+            function displayPoints(daten) {
+                
+                fetch(`https://me22d-2.hbevf6.easypanel.host/api/collections/punkte/records?sort=-points&perPage=150`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(punkte => { displayData(punkte, daten); })
+                    .catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                        alert('Ein Fehler ist aufgetreten: ' + error.message);
+                    });
+            }
+
+            function displayData(punkte, daten) {
+    let items = daten.items;
+
+
+    items.forEach(item => {
+
+
+        // Get points for each discipline
+        let medizinballstossenPoints = getPoints(item.medizinballstossen, punkte, "medizinballstossen");
+        let standweitsprungPoints = getPoints(item.standweitsprung, punkte, "standweitsprung");
+        let einbeinstandPoints = getPoints(item.einbeinstand, punkte, "einbeinstand");
+        let plankPoints = getPoints(item.plank, punkte, "plank");
+        let pendellaufPoints = getPoints(item.pendellauf, punkte, "pendellauf");
+
+        let punkteTotal = pendellaufPoints + plankPoints + einbeinstandPoints + standweitsprungPoints + medizinballstossenPoints
+
+        document.getElementById("points").innerHTML = punkteTotal;
+
+        // Update points for each discipline
+        document.getElementById("medizinballstossen-punkte").innerHTML = `${medizinballstossenPoints} Punkte`;
+        document.getElementById("standweitsprung-punkte").innerHTML = `${standweitsprungPoints} Punkte`;
+        document.getElementById("einbeinstand-punkte").innerHTML = `${einbeinstandPoints} Punkte`;
+        document.getElementById("plank-punkte").innerHTML = `${plankPoints} Punkte`;
+        document.getElementById("pendellauf-punkte").innerHTML = `${pendellaufPoints} Punkte`;
+
+
+        // Update other data
+        document.getElementById("medizinballstossen").innerHTML = `${item.medizinballstossen} Meter`;
+        document.getElementById("einbeinstand").innerHTML = `${item.einbeinstand} Sekunden`;
+        document.getElementById("standweitsprung").innerHTML = `${item.standweitsprung} Meter`;
+        document.getElementById("plank").innerHTML = `${item.plank} Sekunden`;
+        document.getElementById("pendellauf").innerHTML = `${item.pendellauf} Sekunden`;
+    });
+}
+
+function getPoints(result, punkte, discipline) {
+    let punkten = punkte.items;
+
+
+    // Filter the punkten array based on the discipline
+    let filteredPunkten = punkten.filter(item => item.discipline === discipline);
+
+
+    // Iterate over the filtered array to find the appropriate points
+    for (let item of filteredPunkten) {
+        if (result >= item.result) {
+            return item.points;
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+            const url = window.location.href;
+            const queryParams = new URLSearchParams(url);
+            const existingNoteId = Array.from(queryParams.values()).find(x => !!x);
+            if (existingNoteId) {
+                document.getElementById("user-name").innerHTML = existingNoteId;
+            }
+    
+
+
+
+    
+    
+    
+            fetchData();
+    
+
+            
+        </script>
+</body>
+</html>

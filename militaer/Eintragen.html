@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+    
+<body>
+    <div class="wrapper">
+        <nav class="nav">
+            <ol class="nav-list">
+                <li class="nav-item">
+                    <a class="logo-link" href="./Register.html">
+                        <img class="logo" src="https://www.miljobs.ch/img/containers/assets/label_get_ready_rund_outline.png/061ba3d8b164057fa0b7f73b1d407119.png">
+                    </a>
+                </li>
+            </ol>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content">
+                <a class="link-back" onclick="window.location='Dashboard.html'+window.location.search;">Zurück</a>
+                <h1>Ergebnisse eintragen</h1>
+                
+                <form class="form" id="dataForm" onsubmit="submitForm(event)">
+                    <label for="medizinballstossen" >Medizinballstossen (m)</label>
+                    <input name="medizinballstossen" id="medizinballstossen" class="eintragen-input" type="number"step="0.01">
+                    <label for="einbeinstand" >Einbeinstand (s)</label>
+                    <input name="einbeinstand" id="einbeinstand" class="eintragen-input" type="number">
+                    <label for="standweitsprung" >Standweitsprung (m)</label>
+                    <input name="standweitsprung" id="standweitsprung" class="eintragen-input" type="number" step="0.01">
+                    <label for="plank" >Plank (s)</label>
+                    <input name="plank" id="plank" class="eintragen-input" type="number">
+                    <label for="pendellauf" >Pendellauf (s)</label>
+                    <input name="pendellauf" id="pendellauf" class="eintragen-input" type="number">
+                    <button class="eintragen-button" type="submit">Eintragen</button>
+                </form>
+               
+            </div>
+        </div> 
+    </div>
+
+
+    <script>
+        
+        function fetchData() {
+    return fetch(`https://me22d-2.hbevf6.easypanel.host/api/collections/daten/records`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+            alert('Ein Fehler ist aufgetreten: ' + error.message);
+        });
+}
+
+function submitForm(event) {
+    event.preventDefault();
+    console.log(event)
+
+    const form = event.target;
+    const data = createJsObjectFromHtmlForm(form);
+
+    const jsonBody = JSON.stringify(data);
+
+    fetchData().then(existingData => {
+        let existingItem = existingData.items.find(item => item.name === data.name);
+
+        if (existingItem) {
+            // If data with the same name already exists, update it
+            fetch(`https://me22d-2.hbevf6.easypanel.host/api/collections/daten/records/${existingItem.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonBody
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Netzwerkantwort war nicht ok');
+                }
+                window.location = 'Dashboard.html' + window.location.search;
+            })
+            .catch(error => {
+                alert("Ein Fehler beim Aktualisieren der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.");
+            });
+        } else {
+            // If no data with the same name exists, post it
+            fetch('https://me22d-2.hbevf6.easypanel.host/api/collections/daten/records', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonBody
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Netzwerkantwort war nicht ok');
+                }
+                window.location = 'Dashboard.html' + window.location.search;
+            })
+            .catch(error => {
+                alert("Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.");
+            });
+        }
+    });
+}
+
+function createJsObjectFromHtmlForm(form) {
+    const formData = new FormData(event.target);
+    const data = {};
+
+    for (let [key, value] of formData.entries()) {
+        if (value === 'on') {
+            value = true;
+        }
+        if (value === 'off') {
+            value = false;
+        }
+        data[key] = value;
+    }
+
+    let params = new URL(document.location).searchParams;
+    let searchParameter = params.get("name");
+
+    // Add search parameter as a property of the data object
+    if (searchParameter) {
+        data['name'] = searchParameter; // Using bracket notation to add properties to the object
+    }
+    return data;
+}
+
+   </script>
+
+</body>
+</html>
