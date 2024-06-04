@@ -59,9 +59,10 @@
                     </tr>
                 </table>
                 <p class="points">Du hast <span id="points">0</span> Punkte</p>
-                <p class="points">Die geeignete Punktzahl für <span id="funktionenen">POSITION</span> ist <span id="pointsfunktionen">PUNKTE</span> Punkte</p>
+                <p class="points">Die geeignete Punktzahl für <span id="funktionenen">POSITION</span> sind <span id="pointsfunktionen">PUNKTE</span> Punkte</p>
                 <a class="button" onclick="window.location='Eintragen.html'+window.location.search;">Resultate eintragen</a>
                 <a class="button-secondary" onclick="window.location='positionen.html'+window.location.search;">Position eingeben</a>
+                <a class="loeschen" onclick="deleteData()">Ergebnisse löschen</a>
 
             </div>
         </div>
@@ -110,6 +111,51 @@ document.addEventListener('DOMContentLoaded', displayStoredFunction);
                     });
             }
             
+
+            function deleteData() {
+                
+
+
+                fetch(`https://me22d-2.hbevf6.easypanel.host/api/collections/daten/records?filter=(name="${searchParameter}")`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.items.length > 0) {
+                        const recordId = data.items[0].id;
+                        console.log(recordId)
+                        fetch('https://me22d-2.hbevf6.easypanel.host/api/collections/daten/records/' + recordId, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            } 
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                window.location='dashboard.html'+window.location.search;;
+                            })
+                            .catch(error => {
+                                console.error('There has been a problem with your delete operation:', error);
+                                alert('Ein Fehler ist aufgetreten: ' + error.message);
+                            });
+                    } else {
+                        alert('Keine Ergebnisse gefunden zum löschen.');
+                    }
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+
+
+                
+
+            }
+
 
             function displayPoints(daten) {
                 
@@ -201,9 +247,9 @@ function getPoints(result, punkte, discipline) {
 
     
     
-    
             fetchData();
     
+
 
             
         </script>

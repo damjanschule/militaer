@@ -61,7 +61,7 @@ body {
 }
 
 .logo {
-    height: 6rem;
+    height: 5rem;
 }
 
 /* Nav End */
@@ -202,4 +202,11 @@ td, th {
 
 #funktionenen{
     font-weight: 700;
+}
+
+.loeschen {
+    text-align: center;
+    width: 100%;
+    display: block;
+    margin-top: 2rem;
 }
